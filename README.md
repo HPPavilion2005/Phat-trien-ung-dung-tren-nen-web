@@ -12,7 +12,7 @@
 6. [Quản trị cơ sở dữ liệu MariaDB với phpMyAdmin](#6-mariadb-phpmyadmin)
 7. [Cấu hình Node-RED & Cài đặt thư viện MySQL](#7-nodered-config)
 8. [Code Frontend Web (HTML + JS) Bảo Mật & Duy Trì Đăng Nhập](#8-frontend-code)
-9. [Cấu hình Cloudflare Tunnel với Tên miền riêng (Domain xịn)](#9-cloudflare-tunnel)
+9. [Cấu hình Cloudflare Tunnel với Domain cá nhân](#9-cloudflare-tunnel)
 10. [Kiểm thử kết quả theo yêu cầu bài tập](#10-kiem-thu)
 
 ---

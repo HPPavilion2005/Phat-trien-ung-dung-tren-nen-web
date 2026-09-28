@@ -88,6 +88,7 @@ Cơ sở dữ liệu `Remu_db` được khởi tạo tự động từ file `mar
 ### 7.1. Cài đặt thư viện node-red-node-mysql:
 - **Cách 1 (Giao diện)**: Vào menu ☰ -> Manage palette -> tab Install -> tìm `node-red-node-mysql` -> Install.
 - **Cách 2 (Terminal)**: `docker exec -it remu_nodered npm install node-red-node-mysql && docker restart remu_nodered`
+
 Kiểm tra kết quả:
 ![](Images/3.png)
 

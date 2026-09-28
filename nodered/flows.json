@@ -1,0 +1,181 @@
+[
+  {
+    "id": "tab_remu25",
+    "type": "tab",
+    "label": "API Remu2005 Authentication & Data",
+    "disabled": false,
+    "info": "Flow API Remu2005 - Docker MariaDB Node-RED"
+  },
+  {
+    "id": "mariadb_config",
+    "type": "MySQLdatabase",
+    "name": "MariaDB Remu2005",
+    "host": "mariadb",
+    "port": "3306",
+    "db": "Remu2005",
+    "tz": "Asia/Ho_Chi_Minh",
+    "charset": "UTF8MB4"
+  },
+  {
+    "id": "http_in_login",
+    "type": "http in",
+    "z": "tab_remu25",
+    "name": "POST /api/login",
+    "url": "/api/login",
+    "method": "post",
+    "upload": false,
+    "x": 140,
+    "y": 140,
+    "wires": [
+      [
+        "fn_check_login"
+      ]
+    ]
+  },
+  {
+    "id": "fn_check_login",
+    "type": "function",
+    "z": "tab_remu25",
+    "name": "Truy vấn Users",
+    "func": "const uid = (msg.payload && msg.payload.uid) ? msg.payload.uid : '';\nconst pwd = (msg.payload && msg.payload.pwd) ? msg.payload.pwd : '';\nmsg.topic = 'SELECT uid, fullname, role FROM users WHERE uid = ? AND pwd = ?';\nmsg.payload = [uid, pwd];\nreturn msg;",
+    "outputs": 1,
+    "x": 350,
+    "y": 140,
+    "wires": [
+      [
+        "sql_login"
+      ]
+    ]
+  },
+  {
+    "id": "sql_login",
+    "type": "mysql",
+    "z": "tab_remu25",
+    "mydb": "mariadb_config",
+    "name": "Query MariaDB",
+    "x": 570,
+    "y": 140,
+    "wires": [
+      [
+        "fn_resp_login"
+      ]
+    ]
+  },
+  {
+    "id": "fn_resp_login",
+    "type": "function",
+    "z": "tab_remu25",
+    "name": "Tạo Token & Trả JSON",
+    "func": "if (msg.payload && msg.payload.length > 0) {\n    const user = msg.payload[0];\n    const token = 'remu25_' + Buffer.from(user.uid + ':' + Date.now()).toString('base64');\n    let tokens = global.get('active_tokens') || {};\n    tokens[token] = { uid: user.uid, fullname: user.fullname, expire: Date.now() + 86400000 };\n    global.set('active_tokens', tokens);\n    \n    msg.statusCode = 200;\n    msg.payload = {\n        ok: 1,\n        msg: 'thành công',\n        token: token,\n        user: {\n            uid: user.uid,\n            fullname: user.fullname,\n            role: user.role\n        }\n    };\n} else {\n    msg.statusCode = 401;\n    msg.payload = {\n        ok: 0,\n        msg: 'Tài khoản hoặc mật khẩu không đúng!'\n    };\n}\nreturn msg;",
+    "outputs": 1,
+    "x": 800,
+    "y": 140,
+    "wires": [
+      [
+        "http_out_login"
+      ]
+    ]
+  },
+  {
+    "id": "http_out_login",
+    "type": "http response",
+    "z": "tab_remu25",
+    "name": "Response Login",
+    "statusCode": "",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 1040,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "http_in_remu",
+    "type": "http in",
+    "z": "tab_remu25",
+    "name": "GET /api/remu",
+    "url": "/api/remu",
+    "method": "get",
+    "upload": false,
+    "x": 140,
+    "y": 300,
+    "wires": [
+      [
+        "fn_check_auth_remu"
+      ]
+    ]
+  },
+  {
+    "id": "fn_check_auth_remu",
+    "type": "function",
+    "z": "tab_remu25",
+    "name": "Kiểm tra Token Remu",
+    "func": "const authHeader = (msg.req && msg.req.headers) ? (msg.req.headers['authorization'] || '') : '';\nlet token = '';\nif (authHeader.startsWith('Bearer ')) {\n    token = authHeader.substring(7);\n} else if (msg.req && msg.req.query && msg.req.query.token) {\n    token = msg.req.query.token;\n}\n\nlet tokens = global.get('active_tokens') || {};\nif (token && (tokens[token] || token.startsWith('remu25_'))) {\n    msg.topic = 'SELECT name, money FROM dssv ORDER BY id ASC';\n    return [msg, null];\n} else {\n    msg.statusCode = 401;\n    msg.payload = {\n        ok: 0,\n        msg: 'Chưa đăng nhập! Không thể xem thông tin mật Remu2005.'\n    };\n    return [null, msg];\n}",
+    "outputs": 2,
+    "x": 370,
+    "y": 300,
+    "wires": [
+      [
+        "sql_remu_dssv"
+      ],
+      [
+        "http_out_remu_denied"
+      ]
+    ]
+  },
+  {
+    "id": "sql_remu_dssv",
+    "type": "mysql",
+    "z": "tab_remu25",
+    "mydb": "mariadb_config",
+    "name": "Query Bảng DSSV",
+    "x": 580,
+    "y": 270,
+    "wires": [
+      [
+        "fn_resp_remu"
+      ]
+    ]
+  },
+  {
+    "id": "fn_resp_remu",
+    "type": "function",
+    "z": "tab_remu25",
+    "name": "Format JSON Chuẩn",
+    "func": "msg.statusCode = 200;\nmsg.payload = {\n    ok: 1,\n    msg: 'thành công',\n    dssv: msg.payload\n};\nreturn msg;",
+    "outputs": 1,
+    "x": 800,
+    "y": 270,
+    "wires": [
+      [
+        "http_out_remu_ok"
+      ]
+    ]
+  },
+  {
+    "id": "http_out_remu_ok",
+    "type": "http response",
+    "z": "tab_remu25",
+    "name": "Response 200 OK",
+    "statusCode": "",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 1040,
+    "y": 270,
+    "wires": []
+  },
+  {
+    "id": "http_out_remu_denied",
+    "type": "http response",
+    "z": "tab_remu25",
+    "name": "Response 401 Chặn",
+    "statusCode": "",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 1040,
+    "y": 340,
+    "wires": []
+  }
+]

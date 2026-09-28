@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Thông Tin Bảo Mật Remu2005 (remuk235480106063.id.vn)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center shadow-lg">
+    <div class="flex items-center space-x-3">
+      <div class="h-10 w-10 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-xl shadow-md">
+        25
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-white tracking-wide">CỔNG THÔNG TIN MẬT REMU2005</h1>
+        <p class="text-xs text-slate-400">Domain: remuk235480106063.id.vn | MariaDB + Node-RED API</p>
+      </div>
+    </div>
+    <div id="userBadge" class="hidden flex items-center space-x-4">
+      <span class="text-sm bg-indigo-900/60 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full">
+        Xin chào, <strong id="displayName" class="text-white">...</strong>
+      </span>
+      <button onclick="handleLogout()" class="text-sm bg-red-600/80 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg transition font-medium">
+        Đăng xuất
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-6 flex flex-col justify-center">
+
+    <!-- 1. MÀN HÌNH ĐĂNG NHẬP -->
+    <div id="loginCard" class="bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-2xl max-w-md mx-auto w-full">
+      <div class="text-center mb-6">
+        <div class="inline-flex p-3 bg-indigo-500/10 rounded-full text-indigo-400 mb-2">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-white">Yêu Cầu Xác Thực</h2>
+        <p class="text-sm text-slate-400 mt-1">Đăng nhập tài khoản lưu trong MariaDB (Remu2005)</p>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Mã sinh viên / UID</label>
+          <input type="text" id="uid" required placeholder="remu25 hoặc admin"
+                 class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white text-sm">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Mật khẩu</label>
+          <input type="password" id="pwd" required placeholder="••••••••"
+                 class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white text-sm">
+        </div>
+
+        <div id="loginMsg" class="hidden text-sm p-3 rounded-lg border"></div>
+
+        <button type="submit" id="loginBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition duration-200 shadow-md shadow-indigo-600/30">
+          Đăng Nhập
+        </button>
+      </form>
+
+      <!-- Tài khoản demo khớp dữ liệu thực tế -->
+      <div class="mt-6 pt-4 border-t border-slate-700/60 text-xs text-slate-400 space-y-1.5">
+        <p class="font-semibold text-slate-300 mb-1">Tài khoản demo (Bấm vào để điền nhanh):</p>
+        <div onclick="fillDemo('remu25', '05012005')" class="cursor-pointer hover:bg-slate-700/40 p-1.5 rounded transition flex justify-between items-center">
+          <span>• UID: <code class="text-indigo-400 font-mono font-bold">remu25</code> | Pwd: <code class="text-indigo-400 font-mono">05012005</code></span>
+          <span class="text-[11px] bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded">Remu</span>
+        </div>
+        <div onclick="fillDemo('admin', '123456')" class="cursor-pointer hover:bg-slate-700/40 p-1.5 rounded transition flex justify-between items-center">
+          <span>• UID: <code class="text-indigo-400 font-mono font-bold">admin</code> | Pwd: <code class="text-indigo-400 font-mono">123456</code></span>
+          <span class="text-[11px] bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded">Quản trị viên</span>
+        </div>
+        <div onclick="fillDemo('tan25', '23112013')" class="cursor-pointer hover:bg-slate-700/40 p-1.5 rounded transition flex justify-between items-center">
+          <span>• UID: <code class="text-indigo-400 font-mono font-bold">tan25</code> | Pwd: <code class="text-indigo-400 font-mono">23112013</code></span>
+          <span class="text-[11px] bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded">TrongTan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MÀN HÌNH BẢO MẬT (Đã đăng nhập -> Duy trì session) -->
+    <div id="secretCard" class="hidden space-y-6">
+      <div class="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <span class="flex h-3 w-3 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <h2 class="text-xl font-bold text-emerald-300">Đã Xác Thực - Duy Trì Đăng Nhập</h2>
+          </div>
+          <button onclick="fetchSecretData()" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1.5 rounded-lg transition text-slate-300">
+            Làm mới dữ liệu API
+          </button>
+        </div>
+        <p class="text-sm text-slate-300 mt-2">
+          Token phiên làm việc đã được lưu trong <code class="text-emerald-400 font-mono">localStorage</code>. Bạn có thể F5 trang mà không bị mất đăng nhập.
+        </p>
+      </div>
+
+      <!-- Bảng DSSV & Quỹ Tiền -->
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
+          <span>💰 Danh Sách Sinh Viên & Quỹ Tiền Mật (/api/remu)</span>
+        </h3>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-900/80 text-slate-400 uppercase text-xs">
+              <tr>
+                <th class="py-3 px-4 rounded-l-lg">STT</th>
+                <th class="py-3 px-4">Tên Sinh Viên</th>
+                <th class="py-3 px-4 text-right">Số Tiền (VNĐ)</th>
+                <th class="py-3 px-4 text-slate-400 rounded-r-lg">Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody id="dssvTableBody" class="divide-y divide-slate-700/50">
+              <!-- Render tự động -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-700">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Raw JSON từ Node-RED API:</span>
+            <span id="apiLatency" class="text-xs text-indigo-400 font-mono">200 OK</span>
+          </div>
+          <pre id="rawJson" class="bg-slate-950 p-4 rounded-xl text-emerald-400 font-mono text-xs overflow-x-auto border border-slate-800">
+Đang tải dữ liệu...
+          </pre>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const TOKEN_KEY = 'remu_auth_token';
+    const USER_KEY = 'remu_user_info';
+
+    // Hàm điền nhanh tài khoản demo khi click
+    function fillDemo(uid, pwd) {
+      document.getElementById('uid').value = uid;
+      document.getElementById('pwd').value = pwd;
+    }
+
+    // 1. Tự động kiểm tra đăng nhập khi mở trang (Duy trì đăng nhập)
+    window.addEventListener('DOMContentLoaded', () => {
+      checkLoginState();
+    });
+
+    function checkLoginState() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      const user = JSON.parse(localStorage.getItem(USER_KEY) || '{}');
+
+      if (token && user && user.uid) {
+        showSecretScreen(user);
+        fetchSecretData();
+      } else {
+        showLoginScreen();
+      }
+    }
+
+    // 2. Hàm đăng nhập gọi API /api/login
+    async function handleLogin(e) {
+      e.preventDefault();
+      const uid = document.getElementById('uid').value.trim();
+      const pwd = document.getElementById('pwd').value;
+      const msgBox = document.getElementById('loginMsg');
+      const submitBtn = document.getElementById('loginBtn');
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Đang xác thực...';
+      msgBox.className = 'hidden';
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid, pwd })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.ok === 1) {
+          localStorage.setItem(TOKEN_KEY, data.token);
+          localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+
+          showSecretScreen(data.user);
+          fetchSecretData();
+        } else {
+          msgBox.className = 'text-sm p-3 rounded-lg border bg-red-950/60 border-red-500/50 text-red-200 block';
+          msgBox.innerText = data.msg || 'Tài khoản hoặc mật khẩu không chính xác!';
+        }
+      } catch (err) {
+        msgBox.className = 'text-sm p-3 rounded-lg border bg-red-950/60 border-red-500/50 text-red-200 block';
+        msgBox.innerText = 'Lỗi kết nối tới Node-RED API qua Nginx! Kiểm tra docker compose.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Đăng Nhập';
+      }
+    }
+
+    // 3. Hàm gọi API /api/remu lấy thông tin mật
+    async function fetchSecretData() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      const rawJsonBox = document.getElementById('rawJson');
+      const tbody = document.getElementById('dssvTableBody');
+      const latencyBadge = document.getElementById('apiLatency');
+
+      if (!token) {
+        handleLogout();
+        return;
+      }
+
+      const startTime = performance.now();
+      try {
+        // Thử gọi /api/remu, nếu 404 thì gọi /remu (fallback dự phòng)
+        let response = await fetch('/api/remu', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        if (response.status === 404) {
+          response = await fetch('/remu', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+        }
+
+        const latency = Math.round(performance.now() - startTime);
+        latencyBadge.innerText = response.status + ' (' + latency + 'ms)';
+
+        const result = await response.json();
+        rawJsonBox.innerText = JSON.stringify(result, null, 2);
+
+        if (response.ok && result.ok === 1 && Array.isArray(result.dssv)) {
+          tbody.innerHTML = result.dssv.map((item, idx) => 
+            '<tr class="hover:bg-slate-700/30 transition">' +
+              '<td class="py-3 px-4 font-mono text-slate-400">' + (idx + 1) + '</td>' +
+              '<td class="py-3 px-4 font-medium text-white">' + item.name + '</td>' +
+              '<td class="py-3 px-4 text-right font-mono text-emerald-400 font-bold">' + Number(item.money).toLocaleString() + ' đ</td>' +
+              '<td class="py-3 px-4 text-xs text-slate-400 italic">' + (item.secret_note || '—') + '</td>' +
+            '</tr>'
+          ).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-red-400">' + (result.msg || 'Không có quyền xem!') + '</td></tr>';
+        }
+      } catch (err) {
+        rawJsonBox.innerText = 'Lỗi khi gọi API: ' + err.message;
+      }
+    }
+
+    // 4. Hàm đăng xuất (Xóa token khỏi localStorage)
+    function handleLogout() {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      showLoginScreen();
+    }
+
+    function showSecretScreen(user) {
+      document.getElementById('loginCard').classList.add('hidden');
+      document.getElementById('secretCard').classList.remove('hidden');
+      document.getElementById('userBadge').classList.remove('hidden');
+      document.getElementById('displayName').innerText = user.fullname || user.uid;
+    }
+
+    function showLoginScreen() {
+      document.getElementById('loginCard').classList.remove('hidden');
+      document.getElementById('secretCard').classList.add('hidden');
+      document.getElementById('userBadge').classList.add('hidden');
+      document.getElementById('uid').value = '';
+      document.getElementById('pwd').value = '';
+    }
+  </script>
+</body>
+</html>

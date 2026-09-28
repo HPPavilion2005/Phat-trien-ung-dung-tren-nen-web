@@ -122,8 +122,6 @@ Import file `flows.json` bao gồm:
 Chạy `docker compose up -d`, kiểm tra logs bằng `docker compose logs -f` và nghiệm thu tất cả tiêu chí của đề bài!
 Sử dụng Docker Desktop để kiểm tra Images và Containers sau khi sử dụng lệnh `docker compose up -d`. Có thể xem logs bằng HUD thay vì sử dụng lệnh.
 ![[Pasted image 20260928101506.png]]
-
 Chạy web thông qua một thiết bị khác không chung đường mạng ví dụ như điện thoại sử dụng 4G/5G.
-
 ![[Pasted image 20260928115916.png]]
 ![[Pasted image 20260928115953.png]]

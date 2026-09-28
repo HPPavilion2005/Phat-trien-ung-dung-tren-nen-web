@@ -38,7 +38,7 @@ Nếu chưa phân quyền cho user hiện tại:
 sudo usermod -aG docker $USER
 newgrp docker
 ```
-![[Pasted image 20260928102352.png]]
+![[1.png]]
 
 
 ---
@@ -80,7 +80,7 @@ Nginx sử dụng 2 khối `server` riêng:
 ## 6. Quản trị cơ sở dữ liệu MariaDB với phpMyAdmin
 Truy cập `http://localhost:8080`, đăng nhập bằng user `root` và pass `05012005`.
 Cơ sở dữ liệu `Remu_db` được khởi tạo tự động từ file `mariadb/init.sql`.
-![[Pasted image 20260928115122.png]]
+![[2.png]]
 
 ---
 
@@ -89,7 +89,7 @@ Cơ sở dữ liệu `Remu_db` được khởi tạo tự động từ file `mar
 - **Cách 1 (Giao diện)**: Vào menu ☰ -> Manage palette -> tab Install -> tìm `node-red-node-mysql` -> Install.
 - **Cách 2 (Terminal)**: `docker exec -it remu_nodered npm install node-red-node-mysql && docker restart remu_nodered`
 Kiểm tra kết quả:
-![[Pasted image 20260928101735.png]]
+![[3.png]]
 
 ### 7.2. Bắt buộc đăng nhập tại settings.js:
 Cấu hình `adminAuth` với chuỗi bcrypt hash tạo từ công cụ tại tab **"Tạo Hash Mật Khẩu"**.
@@ -114,14 +114,14 @@ Import file `flows.json` bao gồm:
 1. Đăng nhập Cloudflare Zero Trust -> Networks -> Tunnels -> Create tunnel.
 2. Sao chép `TUNNEL_TOKEN` dán vào biến môi trường trong `docker-compose.yml`.
 3. Thêm 2 Public Hostname trỏ tới `http://nginx:80`.
-![[Pasted image 20260928101904.png]]
+![[4.png]]
 
 ---
 
 ## 10. Kiểm thử & Nghiệm thu
 Chạy `docker compose up -d`, kiểm tra logs bằng `docker compose logs -f` và nghiệm thu tất cả tiêu chí của đề bài!
 Sử dụng Docker Desktop để kiểm tra Images và Containers sau khi sử dụng lệnh `docker compose up -d`. Có thể xem logs bằng HUD thay vì sử dụng lệnh.
-![[Pasted image 20260928101506.png]]
+![[5.png]]
 Chạy web thông qua một thiết bị khác không chung đường mạng ví dụ như điện thoại sử dụng 4G/5G.
-![[Pasted image 20260928115916.png]]
-![[Pasted image 20260928115953.png]]
+![[6.png]]
+![[7.png]]

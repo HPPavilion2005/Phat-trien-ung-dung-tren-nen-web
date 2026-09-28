@@ -190,11 +190,17 @@
   },
   "active": "76ddcea60b327fa2",
   "lastOpenFiles": [
+    "Images/7.png",
+    "Images/6.png",
+    "Images/5.png",
+    "Images/4.png",
+    "Images/3.png",
+    "Images/2.png",
+    "Images/1.png",
     "Images/Pasted image 20260928115953.png",
     "Images/Pasted image 20260928115916.png",
     "Images/Pasted image 20260928115122.png",
     "Pasted image 20260928115953.png",
-    "Pasted image 20260928115916.png",
     "nodered/data/package-lock.json",
     "nodered/data/node_modules/mysql2/typings/mysql/LICENSE.txt",
     "nodered/data/node_modules/mysql2/typings/mysql/info.txt",
@@ -219,12 +225,6 @@
     "nodered/data/node_modules/named-placeholders/README.md",
     "nodered/data/node_modules/is-property/README.md",
     "nodered/data/node_modules/safer-buffer/Porting-Buffer.md",
-    "nodered/data/node_modules/undici-types/README.md",
-    "Pasted image 20260928115122.png",
-    "Images/Pasted image 20260928102352.png",
-    "Pasted image 20260928102352.png",
-    "Images/Pasted image 20260928101904.png",
-    "Images/Pasted image 20260928101735.png",
-    "Images/Pasted image 20260928101506.png"
+    "nodered/data/node_modules/undici-types/README.md"
   ]
 }
